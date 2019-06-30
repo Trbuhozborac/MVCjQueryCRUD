@@ -11,16 +11,27 @@ namespace jQueryAjaxCRUD.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Web;
 
     public partial class Employee
     {
         public int EmployeeID { get; set; }
+
+        [Required(ErrorMessage ="This filed is required")]
         public string Name { get; set; }
+
+        [Required(ErrorMessage = "This filed is required")]
         public string Position { get; set; }
+
+        [Required(ErrorMessage = "This filed is required")]
         public string Office { get; set; }
+
+        [Required(ErrorMessage = "This filed is required")]
         public Nullable<int> Salary { get; set; }
+
+        [Display(Name="Image")]
         public string ImagePath { get; set; }
 
         [NotMapped]
