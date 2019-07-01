@@ -41,9 +41,9 @@
         
 
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.EmployeeID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.EmployeeID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.EmployeeID })
+            <a class="btn btn-primary btn-sm" onclick="Edit('@Url.Action("AddOrEdit","Employee", new {id=@item.EmployeeID })')"><i class="fa fa-pencil fa-lg"></i></a>
+            <a class="btn btn-danger btn-sm" onclick="Delete('@Url.Action("Delete","Employee", new {id=@item.EmployeeID })')"><i class="fa fa-trash fa-lg"></i></a>
+
         </td>
     </tr>
 }

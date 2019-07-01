@@ -1,6 +1,7 @@
 ﻿using jQueryAjaxCRUD.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -32,6 +33,13 @@ namespace jQueryAjaxCRUD.Controllers
         public ActionResult AddOrEdit(int id = 0)
         {
             Employee emp = new Employee();
+            if(id != 0)
+            {
+                using(DbModel db = new DbModel())
+                {
+                    emp = db.Employee.Where(x => x.EmployeeID == id).FirstOrDefault<Employee>();
+                }
+            }
             return View(emp);
         }
 
@@ -50,10 +58,37 @@ namespace jQueryAjaxCRUD.Controllers
                 }
                 using (DbModel db = new DbModel())
                 {
-                    db.Employee.Add(emp);
-                    db.SaveChanges();
+                   if(emp.EmployeeID == 0)
+                    {
+                        db.Employee.Add(emp);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        db.Entry(emp).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
                 }
                 return Json(new { success = true, html = GlobalClass.RenderRazorViewToString(this, "ViewAll", GetAllEmployees()), message = "Submitted Successfully" }, JsonRequestBehavior.AllowGet);
+            }
+            catch(Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                using (DbModel db = new DbModel())
+                {
+                    Employee emp = db.Employee.Where(x => x.EmployeeID == id).FirstOrDefault<Employee>();
+                    db.Employee.Remove(emp);
+                    db.SaveChanges();
+                }
+                return Json(new { success = true, html = GlobalClass.RenderRazorViewToString(this, "ViewAll", GetAllEmployees()), message = "Deleted Successfully" }, JsonRequestBehavior.AllowGet);
+
             }
             catch(Exception ex)
             {
