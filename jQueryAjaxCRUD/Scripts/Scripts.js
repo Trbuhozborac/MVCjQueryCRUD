@@ -21,6 +21,7 @@ function jWueryAjaxPost(form)
             processData: false,
             success: function (response) {
                 $('#firstTab').html(response);
+                refreshAddNewTab($(form.attr('data-restUrl'),true));
             }
         }
 
@@ -32,4 +33,19 @@ function jWueryAjaxPost(form)
         $.ajax(ajaxConfig);
     }
     return false;
+}
+
+function refreshAddNewTab(resetUrl, showViewTab)
+{
+    $.ajax({
+        type: 'GET',
+        url: resetUrl,
+        success: function (response) {
+            $("#secondTab").html(response);
+            $('ul.nav.nav-tabs a:eq(1)').html('Add New');
+            if (showViewTab) {
+                $('ul.nav.nav-tabs a:eq(0)').tab('show');
+            }
+        }
+    });
 }

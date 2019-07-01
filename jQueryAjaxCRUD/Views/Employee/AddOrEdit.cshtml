@@ -2,11 +2,11 @@
 
 @{
     ViewBag.Title = "AddOrEdit";
-    Layout = null;
+    
 }
 
 
-@using (Html.BeginForm("AddOrEdit", "Employee", FormMethod.Post, new {enctype = "multipart/form-data", onSubmit = "return jWueryAjaxPost(this);" }))
+@using (Html.BeginForm("AddOrEdit", "Employee", FormMethod.Post, new { enctype = "multipart/form-data", onSubmit = "return jWueryAjaxPost(this);", data_restUrl = Url.Action("AddOrEdit", "Employee", new { id = 0 }) })) 
 {
     @Html.AntiForgeryToken()
     <div class="row">

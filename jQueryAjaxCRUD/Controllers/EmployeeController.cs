@@ -38,20 +38,28 @@ namespace jQueryAjaxCRUD.Controllers
         [HttpPost]
         public ActionResult AddOrEdit(Employee emp)
         {
-            if(emp.ImageUpload != null)
+            try
             {
-                string fileName = Path.GetFileNameWithoutExtension(emp.ImageUpload.FileName);
-                string extension = Path.GetExtension(emp.ImageUpload.FileName);
-                fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                emp.ImagePath = "~/AppFiles/Images/" + fileName;
-                emp.ImageUpload.SaveAs(Path.Combine(Server.MapPath("~/AppFiles/Images/"), fileName));
+                if (emp.ImageUpload != null)
+                {
+                    string fileName = Path.GetFileNameWithoutExtension(emp.ImageUpload.FileName);
+                    string extension = Path.GetExtension(emp.ImageUpload.FileName);
+                    fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                    emp.ImagePath = "~/AppFiles/Images/" + fileName;
+                    emp.ImageUpload.SaveAs(Path.Combine(Server.MapPath("~/AppFiles/Images/"), fileName));
+                }
+                using (DbModel db = new DbModel())
+                {
+                    db.Employee.Add(emp);
+                    db.SaveChanges();
+                }
+                return Json(new { success = true, html = GlobalClass.RenderRazorViewToString(this, "ViewAll", GetAllEmployees()), message = "Submitted Successfully" }, JsonRequestBehavior.AllowGet);
             }
-            using(DbModel db = new DbModel())
+            catch(Exception ex)
             {
-                db.Employee.Add(emp);
-                db.SaveChanges();
+                return Json(new { success = false, message = ex.Message }, JsonRequestBehavior.AllowGet);
+
             }
-            return RedirectToAction("ViewAll");
         }
     }
 }
